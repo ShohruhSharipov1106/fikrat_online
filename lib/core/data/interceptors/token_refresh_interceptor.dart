@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fikrat_online/core/data/singletons/storage.dart';
 
 class CustomInterceptor implements Interceptor {
   final Dio dio;
