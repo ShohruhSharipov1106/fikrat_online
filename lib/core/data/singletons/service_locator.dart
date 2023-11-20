@@ -10,27 +10,27 @@ Future<void> setupLocator({required GetIt serviceLocator, required String baseId
   serviceLocator.registerLazySingleton(() => DioSettings());
 
   ///
-  serviceLocator
-      .registerLazySingleton(() => AuthenticationDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: baseIdUrl)));
+  // serviceLocator
+  //     .registerLazySingleton(() => AuthenticationDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: baseIdUrl)));
 
-  serviceLocator.registerLazySingleton(
-      () => AuthenticationRepositoryImpl(dataSource: serviceLokator<AuthenticationDataSourceImpl>()));
+  // serviceLocator.registerLazySingleton(
+  //     () => AuthenticationRepositoryImpl(dataSource: serviceLokator<AuthenticationDataSourceImpl>()));
 
-
-  ///
-
-  serviceLocator.registerLazySingleton(
-      () => OffertaDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: AppConstants.commonUrl)));
-
-  serviceLocator.registerLazySingleton(() => OffertaRepoImpl(dataSource: serviceLokator<OffertaDataSourceImpl>()));
 
   ///
 
-  serviceLocator.registerLazySingleton(
-      () => ProfileDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: AppConstants.baseUrl)));
+  // serviceLocator.registerLazySingleton(
+  //     () => OffertaDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: AppConstants.commonUrl)));
 
-  serviceLocator
-      .registerLazySingleton(() => ProfileRepositoryImpl(profileDatasource: serviceLokator<ProfileDataSourceImpl>()));
+  // serviceLocator.registerLazySingleton(() => OffertaRepoImpl(dataSource: serviceLokator<OffertaDataSourceImpl>()));
+
+  ///
+
+  // serviceLocator.registerLazySingleton(
+  //     () => ProfileDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: AppConstants.baseUrl)));
+
+  // serviceLocator
+  //     .registerLazySingleton(() => ProfileRepositoryImpl(profileDatasource: serviceLokator<ProfileDataSourceImpl>()));
 
   ///
 
