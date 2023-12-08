@@ -12,11 +12,13 @@ class HighlightedText extends StatelessWidget {
     this.terms,
     required this.allText,
     this.textAlign = TextAlign.left,
-    this.textStyle = const TextStyle(color: aubergine, fontSize: 16, fontWeight: FontWeight.w400),
-    this.textStyleHighlight = const TextStyle(color: aubergine, fontSize: 16, fontWeight: FontWeight.w400),
+    this.textStyle = const TextStyle(
+        color: tiber, fontSize: 16, fontWeight: FontWeight.w400),
+    this.textStyleHighlight = const TextStyle(
+        color: tiber, fontSize: 16, fontWeight: FontWeight.w400),
     this.wordDelimiters = ' .,;?!<>[]~`@#\$%^&*()+-=|/_',
     this.words = false,
-    this.highlightColor = sunglow,
+    this.highlightColor = yellow,
     Key? key,
   })  : assert(highlightedText != null || terms != null),
         super(key: key);
@@ -37,13 +39,16 @@ class HighlightedText extends StatelessWidget {
   Widget build(BuildContext context) {
     final String textLC = caseSensitive ? allText : allText.toLowerCase();
     final List<String> termList = [highlightedText ?? '', ...(terms ?? [])];
-    final List<String> termListLC =
-        termList.where((s) => s.isNotEmpty).map((s) => caseSensitive ? s : s.toLowerCase()).toList();
+    final List<String> termListLC = termList
+        .where((s) => s.isNotEmpty)
+        .map((s) => caseSensitive ? s : s.toLowerCase())
+        .toList();
     List<InlineSpan> children = [];
     int start = 0;
     int idx = 0;
     while (idx < textLC.length) {
-      nonHighlightAdd(int end) => children.add(TextSpan(text: allText.substring(start, end), style: textStyle));
+      nonHighlightAdd(int end) => children
+          .add(TextSpan(text: allText.substring(start, end), style: textStyle));
       int iNearest = -1;
       int idxNearest = __int64MaxValue;
       for (int i = 0; i < termListLC.length; i++) {
@@ -54,7 +59,8 @@ class HighlightedText extends StatelessWidget {
               continue;
             }
             int followingIdx = at + termListLC[i].length;
-            if (followingIdx < textLC.length && !wordDelimiters.contains(textLC[followingIdx])) {
+            if (followingIdx < textLC.length &&
+                !wordDelimiters.contains(textLC[followingIdx])) {
               continue;
             }
           }

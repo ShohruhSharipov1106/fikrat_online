@@ -11,7 +11,7 @@ class SmallContainer extends StatelessWidget {
       width: 40,
       height: 6,
       decoration: BoxDecoration(
-        color: loblolly,
+        color: phoneHintColor,
         borderRadius: BorderRadius.circular(10),
       ),
     );

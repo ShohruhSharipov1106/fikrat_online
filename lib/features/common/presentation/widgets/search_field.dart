@@ -78,7 +78,7 @@ class _SearchFieldState extends State<SearchField> {
           return TextFormField(
             readOnly: widget.readOnly,
             cursorHeight: 20,
-            cursorColor: dark,
+            cursorColor: black,
             cursorWidth: 1,
             autofocus: widget.focus,
             key: widget.stateKey,
@@ -94,18 +94,18 @@ class _SearchFieldState extends State<SearchField> {
                     ),
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              fillColor: focusNode.hasFocus ? widget.fillColor : lilyWhite,
+              fillColor: focusNode.hasFocus ? widget.fillColor : ghost,
               filled: true,
               suffixIconConstraints: const BoxConstraints(maxWidth: 40),
               prefixIcon: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 8, 0, 8),
                 child: Center(
                   child: SvgPicture.asset(
-                    AppIcons.searchNormal,
+                    AppIcons.search,
                     width: 20,
                     height: 20,
                     fit: BoxFit.cover,
-                    color: stack,
+                    color: tabGrey,
                   ),
                 ),
               ),
@@ -133,7 +133,7 @@ class _SearchFieldState extends State<SearchField> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 borderSide: BorderSide(
-                  color: widget.hasBorder ? lilyWhite : Colors.transparent,
+                  color: widget.hasBorder ? ghost : Colors.transparent,
                   width: 1.6,
                 ),
               ),

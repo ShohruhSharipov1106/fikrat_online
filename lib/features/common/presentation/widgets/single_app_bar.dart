@@ -35,14 +35,15 @@ class SingleAppBar extends StatelessWidget implements PreferredSizeWidget {
             },
         icon: SvgPicture.asset(
           AppIcons.arrowLeft,
-          colorFilter: const ColorFilter.mode(dark, BlendMode.srcIn),
+          colorFilter: const ColorFilter.mode(black, BlendMode.srcIn),
         ),
       ),
       title: BlocBuilder<LocalesBloc, LocalesState>(
         builder: (context, state) {
           return Text(
             context.read<LocalesBloc>().translate(title),
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 16),
+            style:
+                Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 16),
           );
         },
       ),

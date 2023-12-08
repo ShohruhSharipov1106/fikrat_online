@@ -1,3 +1,4 @@
+import 'package:fikrat_online/assets/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -7,7 +8,12 @@ class ShimmerItem extends StatelessWidget {
   final EdgeInsets? margin;
   final double? borderRadius;
 
-  const ShimmerItem({required this.width, required this.height, this.borderRadius, this.margin, Key? key})
+  const ShimmerItem(
+      {required this.width,
+      required this.height,
+      this.borderRadius,
+      this.margin,
+      Key? key})
       : super(key: key);
 
   @override

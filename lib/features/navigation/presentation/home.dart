@@ -1,3 +1,4 @@
+import 'package:fikrat_online/assets/constants/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,15 +14,17 @@ import 'package:fikrat_online/features/navigation/presentation/widgets/nav_bar_i
 
 enum NavItemEnum {
   home,
-  fonds,
-  reports,
+  search,
+  live,
+  saved,
   profile,
 }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  static Route route() => CupertinoPageRoute<void>(builder: (_) => const HomeScreen());
+  static Route route() =>
+      CupertinoPageRoute<void>(builder: (_) => const HomeScreen());
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -32,8 +35,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late HomeBloc homeBloc;
   final Map<NavItemEnum, GlobalKey<NavigatorState>> _navigatorKeys = {
     NavItemEnum.home: GlobalKey<NavigatorState>(),
-    NavItemEnum.fonds: GlobalKey<NavigatorState>(),
-    NavItemEnum.reports: GlobalKey<NavigatorState>(),
+    NavItemEnum.search: GlobalKey<NavigatorState>(),
+    NavItemEnum.live: GlobalKey<NavigatorState>(),
+    NavItemEnum.saved: GlobalKey<NavigatorState>(),
     NavItemEnum.profile: GlobalKey<NavigatorState>(),
   };
 
@@ -45,33 +49,50 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     lables = [
       const NavBar(
-        title: LocaleKeys.main,
+        // TODO LOCALE
+        title: "Bosh sahifa",
         id: 0,
-        unSelectedIcon: AppIcons.heartGrey,
-        selectedIcon: AppIcons.enableHeart,
+        // TODO CHANGE ICONS FOR HOME
+        unSelectedIcon: AppIcons.home,
+        selectedIcon: AppIcons.home,
       ),
       const NavBar(
-        title: LocaleKeys.fonds,
+        // TODO LOCALE
+        title: "Qidiruv",
         id: 1,
-        unSelectedIcon: AppIcons.category,
-        selectedIcon: AppIcons.activeCategory,
+        // TODO CHANGE ICONS FOR SEARCH
+        unSelectedIcon: AppIcons.search,
+        selectedIcon: AppIcons.search,
       ),
       const NavBar(
-        title: LocaleKeys.reports,
+        // TODO LOCALE
+        title: "Jonli efir",
         id: 2,
-        unSelectedIcon: AppIcons.inActiveReports,
-        selectedIcon: AppIcons.activeReports,
+        // TODO CHANGE ICONS FOR LIVE
+        unSelectedIcon: AppIcons.liveIcon,
+        selectedIcon: AppIcons.liveIcon,
       ),
-      NavBar(
-        title: LocaleKeys.profile,
+      const NavBar(
+        // TODO LOCALE
+        title: "Saqlanmalar",
         id: 3,
-        unSelectedIcon: context.read<AuthenticationBloc>().state.user.profile.avatar.s100X100.isNotEmpty
-            ? context.read<AuthenticationBloc>().state.user.profile.avatar.s100X100
-            : AppIcons.defaultAvatar,
-        selectedIcon: AppIcons.activeUser,
+        // TODO CHANGE ICONS FOR SAVED
+        unSelectedIcon: AppIcons.calendar,
+        selectedIcon: AppIcons.calendar,
+      ),
+      const NavBar(
+        // TODO LOCALE
+        title: "Profil",
+        id: 4,
+        // TODO CHANGE ICONS FOR PROFILE
+        unSelectedIcon: AppIcons.logout,
+        selectedIcon: AppIcons.person,
       ),
     ];
-    _controller = TabController(length: 4, vsync: this, animationDuration: const Duration(milliseconds: 0));
+    _controller = TabController(
+        length: 4,
+        vsync: this,
+        animationDuration: const Duration(milliseconds: 0));
 
     _controller.addListener(onTabChange);
 
@@ -101,7 +122,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: WillPopScope(
         onWillPop: () async {
           final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[NavItemEnum.values[_currentIndex]]!.currentState!.maybePop();
+              !await _navigatorKeys[NavItemEnum.values[_currentIndex]]!
+                  .currentState!
+                  .maybePop();
           if (isFirstRouteInCurrentTab) {
             if (NavItemEnum.values[_currentIndex] != NavItemEnum.home) {
               changePage(0);
@@ -126,32 +149,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               BlocListener<DeepLinkBloc, DeepLinkState>(
                 listener: (context, state) async {
-                  if (state is DeepLinkTriggeredState) {
-                    switch (state.type) {
-                      case 'project':
-                        if (state.link.isNotEmpty) {
-                          Navigator.of(context).push(
-                            MaterialWithModalsPageRoute(
-                              builder: (_) => SingleDonationPage(
-                                id: state.link,
-                              ),
-                            ),
-                          );
-                        }
-                        break;
-                      case 'company':
-                        if (state.link.isNotEmpty) {
-                          Navigator.of(context).push(
-                            MaterialWithModalsPageRoute(
-                              builder: (_) => FondsSinglePage(
-                                id: state.link,
-                              ),
-                            ),
-                          );
-                        }
-                        break;
-                    }
-                  }
+                  // if (state is DeepLinkTriggeredState) {
+                  //   switch (state.type) {
+                  //     case 'project':
+                  //       if (state.link.isNotEmpty) {
+                  //         Navigator.of(context).push(
+                  //           MaterialWithModalsPageRoute(
+                  //             builder: (_) => SingleDonationPage(
+                  //               id: state.link,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       }
+                  //       break;
+                  //     case 'company':
+                  //       if (state.link.isNotEmpty) {
+                  //         Navigator.of(context).push(
+                  //           MaterialWithModalsPageRoute(
+                  //             builder: (_) => FondsSinglePage(
+                  //               id: state.link,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       }
+                  //       break;
+                  //   }
+                  // }
                 },
               ),
             ],
@@ -160,13 +183,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 statusBarBrightness: Brightness.light,
                 statusBarIconBrightness: Brightness.light,
                 systemNavigationBarIconBrightness: Brightness.dark,
-                systemNavigationBarColor: solitude1,
               ),
               child: Scaffold(
                 resizeToAvoidBottomInset: true,
                 bottomNavigationBar: Container(
                   // height: 48 + MediaQuery.paddingOf(context).bottom,
-                  decoration: const BoxDecoration(color: solitude1),
+                  decoration: const BoxDecoration(color: white),
                   child: TabBar(
                     indicator: const BoxDecoration(),
                     padding: EdgeInsets.zero,
@@ -191,8 +213,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildPageNavigator(NavItemEnum.home),
-                    _buildPageNavigator(NavItemEnum.fonds),
-                    _buildPageNavigator(NavItemEnum.reports),
+                    _buildPageNavigator(NavItemEnum.search),
+                    _buildPageNavigator(NavItemEnum.live),
+                    _buildPageNavigator(NavItemEnum.saved),
                     _buildPageNavigator(NavItemEnum.profile),
                   ],
                 ),
@@ -215,7 +238,8 @@ class HomeTabControllerProvider extends InheritedWidget {
   }) : super(key: key, child: child);
 
   static HomeTabControllerProvider of(BuildContext context) {
-    final HomeTabControllerProvider? result = context.dependOnInheritedWidgetOfExactType<HomeTabControllerProvider>();
+    final HomeTabControllerProvider? result =
+        context.dependOnInheritedWidgetOfExactType<HomeTabControllerProvider>();
     assert(result != null, 'No HomeTabControllerProvider found in context');
     return result!;
   }

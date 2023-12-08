@@ -80,8 +80,8 @@ class DefaultTextField extends StatelessWidget {
     this.textAlignVertical,
     this.expands,
     this.fillColor = whiteSmoke,
-    this.cursorColor = dark,
-    this.focusColor = blue,
+    this.cursorColor = black,
+    this.focusColor = blueDodge,
     this.enabledBorder = whiteSmoke,
     this.fullFieldBorder,
     this.fullFieldColor,
@@ -121,7 +121,11 @@ class DefaultTextField extends StatelessWidget {
                 onChanged: onChanged,
                 validator: validator,
                 textInputAction: textInputAction,
-                style: style ?? Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 14),
+                style: style ??
+                    Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(fontSize: 14),
                 inputFormatters: inputFormatters,
                 obscureText: isObscure,
                 keyboardType: keyboardType,
@@ -138,22 +142,29 @@ class DefaultTextField extends StatelessWidget {
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(borderRadius),
-                        borderSide: const BorderSide(color: red),
+                        borderSide: const BorderSide(color: errorRed),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(borderRadius),
                         borderSide: BorderSide(
-                          color: hasError ? red : enabledBorder,
+                          color: hasError ? errorRed : enabledBorder,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(borderRadius),
-                        borderSide: BorderSide(color: hasError ? red : focusColor),
+                        borderSide:
+                            BorderSide(color: hasError ? errorRed : focusColor),
                       ),
-                      hintText: context.read<LocalesBloc>().translate(hintText ?? ''),
-                      hintStyle: hintStyle ?? Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 14),
+                      hintText:
+                          context.read<LocalesBloc>().translate(hintText ?? ''),
+                      hintStyle: hintStyle ??
+                          Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(fontSize: 14),
                       contentPadding: contentPadding,
-                      suffixIconConstraints: BoxConstraints(maxWidth: suffixMaxWidth),
+                      suffixIconConstraints:
+                          BoxConstraints(maxWidth: suffixMaxWidth),
                       suffixIcon: hasSuffixIcon
                           ? const SizedBox()
                           : Padding(
@@ -162,7 +173,8 @@ class DefaultTextField extends StatelessWidget {
                             ),
                       fillColor: fillColor,
                       filled: true,
-                      prefixIconConstraints: BoxConstraints(maxWidth: prefixMaxWidth),
+                      prefixIconConstraints:
+                          BoxConstraints(maxWidth: prefixMaxWidth),
                       prefixIcon: prefix,
                       counterText: counterText,
                     ),

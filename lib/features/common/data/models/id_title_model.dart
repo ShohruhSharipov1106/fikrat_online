@@ -12,7 +12,8 @@ class IdTitleModel extends IdTitleEntity {
     required super.order,
   });
 
-  factory IdTitleModel.fromJson(Map<String, dynamic> json) => _$IdTitleModelFromJson(json);
+  factory IdTitleModel.fromJson(Map<String, dynamic> json) =>
+      _$IdTitleModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$IdTitleModelToJson(this);
 }

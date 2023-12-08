@@ -1,4 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fikrat_online/features/live_stream/live_stream_screen.dart';
+import 'package:fikrat_online/features/profile/profile_screen.dart';
+import 'package:fikrat_online/features/saveds/saveds_screen.dart';
+import 'package:fikrat_online/features/search/search_screen.dart';
 import 'package:fikrat_online/features/navigation/presentation/bloc/home_bloc.dart';
 import 'package:fikrat_online/features/navigation/presentation/home.dart';
 import 'package:flutter/material.dart';
@@ -12,34 +15,41 @@ class TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final NavItemEnum tabItem;
 
-  const TabNavigator({required this.tabItem, required this.navigatorKey, required this.homeBloc, Key? key})
+  const TabNavigator(
+      {required this.tabItem,
+      required this.navigatorKey,
+      required this.homeBloc,
+      Key? key})
       : super(key: key);
 
   @override
   State<TabNavigator> createState() => _TabNavigatorState();
 }
 
-class _TabNavigatorState extends State<TabNavigator> with AutomaticKeepAliveClientMixin {
-  Map<String, WidgetBuilder> _routeBuilders({required BuildContext context, required RouteSettings routeSettings}) {
+class _TabNavigatorState extends State<TabNavigator>
+    with AutomaticKeepAliveClientMixin {
+  Map<String, WidgetBuilder> _routeBuilders(
+      {required BuildContext context, required RouteSettings routeSettings}) {
     switch (widget.tabItem) {
       case NavItemEnum.home:
         return {
-          TabNavigatorRoutes.root: (context) => BlocProvider(
-                create: (_) => widget.homeBloc,
-                child: HomePage(kontext: context),
-              ),
+          TabNavigatorRoutes.root: (context) => HomeScreen(),
         };
-      case NavItemEnum.fonds:
+      case NavItemEnum.search:
         return {
-          TabNavigatorRoutes.root: (context) => const FondsPage(),
+          TabNavigatorRoutes.root: (context) => const SearchScreen(),
         };
-      case NavItemEnum.reports:
+      case NavItemEnum.live:
         return {
-          TabNavigatorRoutes.root: (context) => const ReportsPage(),
+          TabNavigatorRoutes.root: (context) => const LiveStreamScreen(),
+        };
+      case NavItemEnum.saved:
+        return {
+          TabNavigatorRoutes.root: (context) => const SavedsScreen(),
         };
       case NavItemEnum.profile:
         return {
-          TabNavigatorRoutes.root: (context) => const ProfilePage(),
+          TabNavigatorRoutes.root: (context) => const ProfileScreen(),
         };
       default:
         return {
@@ -55,10 +65,12 @@ class _TabNavigatorState extends State<TabNavigator> with AutomaticKeepAliveClie
       key: widget.navigatorKey,
       initialRoute: TabNavigatorRoutes.root,
       onGenerateRoute: (routeSettings) {
-        final routeBuilders = _routeBuilders(context: context, routeSettings: routeSettings);
+        final routeBuilders =
+            _routeBuilders(context: context, routeSettings: routeSettings);
         return MaterialPageRoute(
-          builder: (context) =>
-              routeBuilders.containsKey(routeSettings.name) ? routeBuilders[routeSettings.name]!(context) : Container(),
+          builder: (context) => routeBuilders.containsKey(routeSettings.name)
+              ? routeBuilders[routeSettings.name]!(context)
+              : Container(),
         );
       },
     );

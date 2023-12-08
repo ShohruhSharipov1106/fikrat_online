@@ -1,14 +1,12 @@
 import 'dart:developer';
 
+import 'package:fikrat_online/features/common/presentation/bloc/offerta_bloc/offerta_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:formz/formz.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
-import 'package:fikrat_online/features/common/domain/entities/static_page_detail_entity.dart';
-import 'package:fikrat_online/features/common/domain/usecase/get_static_page_usecase.dart';
-import 'package:fikrat_online/features/common/presentation/bloc/get_offer_bloc/offerta_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/bottom_sheet_header.dart';
 import 'package:fikrat_online/generated/locale_keys.g.dart';
 
@@ -28,7 +26,7 @@ class _OffertaPageState extends State<OffertaPage> {
   @override
   void initState() {
     super.initState();
-    bloc = OffertaBloc()..add(const GetStaticPage(params: GetStaticPageParams(search: "commeta-hissa")));
+    bloc = OffertaBloc()..add(const GetOfferta(type: 'offerta'));
   }
 
   @override
@@ -40,7 +38,8 @@ class _OffertaPageState extends State<OffertaPage> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-      value: const SystemUiOverlayStyle(systemNavigationBarColor: solitude1),
+      value:
+          const SystemUiOverlayStyle(systemNavigationBarColor: disabledButton),
       child: BlocProvider.value(
         value: bloc,
         child: Scaffold(
@@ -64,17 +63,17 @@ class _OffertaPageState extends State<OffertaPage> {
                 Expanded(
                   child: BlocBuilder<OffertaBloc, OffertaState>(
                     builder: (context, state) {
-                      if (state.staticPageStatus == FormzSubmissionStatus.inProgress) {
-                        return const Center(child: CircularProgressIndicator.adaptive());
-                      } else if (state.staticPageStatus == FormzSubmissionStatus.success) {
-                        if (state.content == const StaticPageDetailEntity() &&
-                            state.status != FormzSubmissionStatus.failure) {
-                          bloc.add(GetOfferta(type: state.searchedType));
-                        }
+                      if (state.staticPageStatus ==
+                          FormzSubmissionStatus.inProgress) {
+                        return const Center(
+                            child: CircularProgressIndicator.adaptive());
+                      } else if (state.staticPageStatus ==
+                          FormzSubmissionStatus.success) {
                         if (state.status == FormzSubmissionStatus.inProgress) {
-                          return const Center(child: CircularProgressIndicator.adaptive());
-                        } else if (state.staticPageStatus == FormzSubmissionStatus.success) {
-                          log("content => ${state.content.content}");
+                          return const Center(
+                              child: CircularProgressIndicator.adaptive());
+                        } else if (state.staticPageStatus ==
+                            FormzSubmissionStatus.success) {
                           return Padding(
                             padding: const EdgeInsets.all(12),
                             child: Scrollbar(
@@ -83,16 +82,16 @@ class _OffertaPageState extends State<OffertaPage> {
                               child: SingleChildScrollView(
                                 physics: const BouncingScrollPhysics(),
                                 child: Html(
-                                  data: widget.content ?? state.content.content,
+                                  data: widget.content,
                                   style: {
                                     'p': Style(
                                       fontSize: FontSize.medium,
-                                      color: gordonsGreen,
+                                      color: callGreenWithOpacity12,
                                       fontWeight: FontWeight.w400,
                                     ),
                                     'h2': Style(
                                       fontSize: FontSize.larger,
-                                      color: gordonsGreen,
+                                      color: callGreenWithOpacity12,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   },

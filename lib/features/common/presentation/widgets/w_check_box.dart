@@ -29,9 +29,12 @@ class WCheckBox extends StatelessWidget {
         color: isChecked ? checkBoxColor : white,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: isChecked ? checkBoxColor : titanWhite,
+          color: isChecked ? checkBoxColor : shuttleGrey,
           width: 1.6,
         ),
       ),
-      child: isChecked ? SvgPicture.asset(activeIcon ?? AppIcons.activeCheckbox) : const SizedBox());
+      // TODO CHANGE ICON FOR CHECKED CASE
+      child: isChecked
+          ? SvgPicture.asset(activeIcon ?? AppIcons.activeIcon)
+          : const SizedBox());
 }

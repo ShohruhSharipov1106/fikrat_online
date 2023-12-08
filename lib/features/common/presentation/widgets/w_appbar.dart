@@ -44,7 +44,7 @@ class WAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         decoration: BoxDecoration(
           color: white,
-          boxShadow: hasElevation ? aliminuimBoxShadow : [],
+          // boxShadow: hasElevation ? aliminuimBoxShadow : [],
         ),
         child: Row(
           children: [
@@ -54,7 +54,7 @@ class WAppBar extends StatelessWidget implements PreferredSizeWidget {
                   padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                   child: SvgPicture.asset(
                     AppIcons.arrowLeft,
-                    colorFilter: const ColorFilter.mode(dark, BlendMode.srcIn),
+                    colorFilter: const ColorFilter.mode(black, BlendMode.srcIn),
                   ),
                 ),
                 onTap: () {

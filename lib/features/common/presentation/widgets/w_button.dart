@@ -33,7 +33,7 @@ class WButton extends StatelessWidget {
     this.color = mainColor,
     this.textColor = white,
     this.borderRadius = 10,
-    this.disabledButtonColor = linkWater,
+    this.disabledButtonColor = disabledButton,
     this.isDisabled = false,
     this.isLoading = false,
     this.width,
@@ -67,7 +67,7 @@ class WButton extends StatelessWidget {
         padding: padding ?? EdgeInsets.zero,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isDisabled ? linkWater : color,
+          color: isDisabled ? disabledButtonColor : color,
           borderRadius: BorderRadius.circular(borderRadius),
           border: border,
           gradient: gradient,
@@ -77,7 +77,10 @@ class WButton extends StatelessWidget {
             ? const Center(child: CupertinoActivityIndicator(color: white))
             : AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(color: isDisabled ? baliHali : white),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(color: isDisabled ? baliHai : white),
                 child: child ??
                     BlocBuilder<LocalesBloc, LocalesState>(
                       builder: (context, state) {

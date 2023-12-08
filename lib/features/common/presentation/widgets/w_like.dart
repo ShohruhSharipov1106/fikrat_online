@@ -68,12 +68,12 @@ class _WLikeState extends State<WLike> {
         child: isLiked
             ? widget.activeIcon ??
                 SvgPicture.asset(
-                  AppIcons.activeBookmark,
+                  AppIcons.activeIcon,
                   key: const ValueKey<int>(1),
                 )
             : widget.inActiveIcon ??
                 SvgPicture.asset(
-                  AppIcons.bookmark,
+                  AppIcons.inactiveIcon,
                   key: const ValueKey<int>(2),
                   color: widget.inActiveColor,
                 ),

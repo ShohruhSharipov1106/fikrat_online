@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fikrat_online/assets/constants/app_constants.dart';
 import 'package:fikrat_online/core/data/singletons/storage.dart';
 
 class CustomInterceptor implements Interceptor {
@@ -7,13 +8,18 @@ class CustomInterceptor implements Interceptor {
   const CustomInterceptor({required this.dio});
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 403 || err.response?.statusCode == 401) {
       StorageRepository.deleteString(StoreKeys.token);
       print("token refresh on error");
       await _refreshToken();
-      if (StorageRepository.getString(StoreKeys.token).replaceAll('Bearer', '').trim().isNotEmpty) {
-        err.requestOptions.headers['Authorization'] = StorageRepository.getString(StoreKeys.token);
+      if (StorageRepository.getString(StoreKeys.token)
+          .replaceAll('Bearer', '')
+          .trim()
+          .isNotEmpty) {
+        err.requestOptions.headers['Authorization'] =
+            StorageRepository.getString(StoreKeys.token);
       }
 
       final response = await _resolveResponse(err.requestOptions);
@@ -29,7 +35,8 @@ class CustomInterceptor implements Interceptor {
   }
 
   @override
-  Future<void> onResponse(Response response, ResponseInterceptorHandler handler) async {
+  Future<void> onResponse(
+      Response response, ResponseInterceptorHandler handler) async {
     if (response.statusCode == 403) {
       if (StorageRepository.getString(StoreKeys.refresh).isEmpty) {
         handler.next(response);
@@ -38,8 +45,12 @@ class CustomInterceptor implements Interceptor {
         return;
       }
 
-      if (StorageRepository.getString(StoreKeys.token).replaceAll('Bearer', '').trim().isNotEmpty) {
-        response.requestOptions.headers['Authorization'] = StorageRepository.getString(StoreKeys.token);
+      if (StorageRepository.getString(StoreKeys.token)
+          .replaceAll('Bearer', '')
+          .trim()
+          .isNotEmpty) {
+        response.requestOptions.headers['Authorization'] =
+            StorageRepository.getString(StoreKeys.token);
       }
       final resolved = await _resolveResponse(response.requestOptions);
       handler.resolve(resolved);
@@ -50,10 +61,14 @@ class CustomInterceptor implements Interceptor {
 
   Future<void> _refreshToken() async {
     if (StorageRepository.getString(StoreKeys.refresh).isNotEmpty) {
-      final response = await dio.post('${AppConstants.idUrl}/TokenRefresh/',
+      final response = await dio.post(
+          '${AppConstants.BASE_URL_DEV}/TokenRefresh/',
           data: {"refresh": StorageRepository.getString(StoreKeys.refresh)});
-      if (response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300) {
-        StorageRepository.putString(StoreKeys.token, 'Bearer ${response.data['access']}');
+      if (response.statusCode != null &&
+          response.statusCode! >= 200 &&
+          response.statusCode! < 300) {
+        StorageRepository.putString(
+            StoreKeys.token, 'Bearer ${response.data['access']}');
       } else {
         StorageRepository.deleteString(StoreKeys.refresh);
       }
@@ -70,7 +85,10 @@ class CustomInterceptor implements Interceptor {
         formData.files.add(MapEntry(
             mapFile.key,
             MultipartFile.fromFileSync(
-                fields.firstWhere((element) => element.key == 'photo_path', orElse: () => const MapEntry('', '')).value,
+                fields
+                    .firstWhere((element) => element.key == 'photo_path',
+                        orElse: () => const MapEntry('', ''))
+                    .value,
                 filename: mapFile.value.filename)));
       }
       options.data = formData;

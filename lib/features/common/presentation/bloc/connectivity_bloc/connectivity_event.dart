@@ -1,9 +1,28 @@
 part of 'connectivity_bloc.dart';
 
-@freezed
-class ConnectivityEvent with _$ConnectivityEvent {
-  const factory ConnectivityEvent.setup() = _Setup;
-  const factory ConnectivityEvent.changeStatus(bool status) = _ChangeStatus;
-  const factory ConnectivityEvent.checkConnection({VoidCallback? onSuccess}) =
-      _CheckConnection;
+abstract class ConnectivityEvent extends Equatable {
+  const ConnectivityEvent();
+}
+
+class SetupConnectivity extends ConnectivityEvent {
+  const SetupConnectivity();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ChangeStatus extends ConnectivityEvent {
+  const ChangeStatus(this.status);
+  final bool status;
+
+  @override
+  List<Object> get props => [status];
+}
+
+class CheckConnection extends ConnectivityEvent {
+  const CheckConnection({this.onSuccess});
+  final VoidCallback? onSuccess;
+
+  @override
+  List<Object?> get props => [onSuccess];
 }

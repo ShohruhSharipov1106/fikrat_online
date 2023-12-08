@@ -24,11 +24,13 @@ class IdTitleEntity extends Equatable {
       ];
 }
 
-class IdTitleConverter<S> implements JsonConverter<IdTitleEntity, Map<String, dynamic>?> {
+class IdTitleConverter<S>
+    implements JsonConverter<IdTitleEntity, Map<String, dynamic>?> {
   const IdTitleConverter();
 
   @override
-  IdTitleEntity fromJson(Map<String, dynamic>? json) => IdTitleModel.fromJson(json ?? {});
+  IdTitleEntity fromJson(Map<String, dynamic>? json) =>
+      IdTitleModel.fromJson(json ?? {});
 
   @override
   Map<String, dynamic> toJson(IdTitleEntity object) => {};

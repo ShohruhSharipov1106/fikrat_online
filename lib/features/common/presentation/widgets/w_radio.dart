@@ -18,7 +18,7 @@ class WRadio<T> extends StatelessWidget {
     required this.value,
     required this.groupValue,
     this.activeColor = mainColor,
-    this.inactiveColor = titanWhite,
+    this.inactiveColor = disabledText,
     this.borderWidth = 2,
     this.activeSize = 10,
     this.backgroundColor = Colors.transparent,
@@ -46,9 +46,13 @@ class WRadio<T> extends StatelessWidget {
                   width: borderWidth,
                 ),
                 shape: BoxShape.circle,
-                color: value == groupValue ? radioColor ?? mainColor : backgroundColor,
+                color: value == groupValue
+                    ? radioColor ?? mainColor
+                    : backgroundColor,
               ),
-              padding: value == groupValue ? const EdgeInsets.all(3) : EdgeInsets.zero,
+              padding: value == groupValue
+                  ? const EdgeInsets.all(3)
+                  : EdgeInsets.zero,
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 80),
@@ -56,7 +60,9 @@ class WRadio<T> extends StatelessWidget {
               width: activeSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: value == groupValue ? white : centerColor ?? Colors.transparent,
+                color: value == groupValue
+                    ? white
+                    : centerColor ?? Colors.transparent,
               ),
             ),
           ],

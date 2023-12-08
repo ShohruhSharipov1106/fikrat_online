@@ -3,18 +3,14 @@ import 'package:fikrat_online/core/exceptions/failures.dart';
 import 'package:fikrat_online/core/utils/either.dart';
 import 'package:fikrat_online/features/common/data/datasources/offerta_datasource.dart';
 import 'package:fikrat_online/features/common/domain/repositories/offerta_repository.dart';
-import 'package:fikrat_online/features/common/domain/entities/static_page_entity.dart';
-import 'package:fikrat_online/features/common/domain/usecase/get_static_page_usecase.dart';
-import 'package:fikrat_online/features/pagination/data/models/generic_pagination.dart';
 
-class OffertaRepoImpl extends OffertaRepo {
+class OffertaRepoImpl extends OffertaRepository {
   final OffertaDataSource dataSource;
   OffertaRepoImpl({required this.dataSource});
   @override
-  Future<Either<Failure, GenericPagination<StaticPageEntity>>> getStaticPage(
-      {GetStaticPageParams? params}) async {
+  Future<Either<Failure, void>> getOfferta() async {
     try {
-      final result = await dataSource.getStaticPage(params: params);
+      final result = await dataSource.getOfferta();
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(

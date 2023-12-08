@@ -106,7 +106,7 @@ class _WCupertinoSwitchState extends State<WCupertinoSwitch> {
                 height: widget.height,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: isSwitched ? white : quartz,
+                    color: isSwitched ? white : nero,
                     width: 1,
                     style: BorderStyle.solid,
                   ),
@@ -143,7 +143,7 @@ class _WCupertinoSwitchState extends State<WCupertinoSwitch> {
                   decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.circular((widget.height - 5) / 2),
-                    color: isSwitched ? white : quartz,
+                    color: isSwitched ? white : nero,
                   ),
                 ),
               )

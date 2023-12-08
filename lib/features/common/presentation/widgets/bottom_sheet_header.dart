@@ -41,7 +41,7 @@ class BottomSheetHeader extends StatelessWidget {
               AppIcons.arrowLeft,
               width: 24,
               height: 24,
-              color: dark,
+              color: black,
             ),
           ),
         },

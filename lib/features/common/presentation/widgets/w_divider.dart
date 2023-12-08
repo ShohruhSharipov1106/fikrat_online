@@ -8,7 +8,7 @@ class WDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Divider(
-      color: lilyWhite,
+      color: ghost,
       thickness: 1,
       height: 1,
       indent: indent,

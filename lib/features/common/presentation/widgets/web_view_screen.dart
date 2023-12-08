@@ -11,7 +11,8 @@ class WebViewScreen extends StatefulWidget {
   final String url;
   final String title;
 
-  const WebViewScreen({required this.url, required this.title, Key? key}) : super(key: key);
+  const WebViewScreen({required this.url, required this.title, Key? key})
+      : super(key: key);
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -43,7 +44,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         body: Column(
           children: [
             BottomSheetHeader(title: widget.title, hasArrowLeft: false),
-            const Divider(color: lavender, thickness: 1, height: 1),
+            const Divider(color: tabGrey, thickness: 1, height: 1),
             Expanded(
               child: Stack(
                 children: [
@@ -52,14 +53,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       _controller = controller;
                     },
                     initialOptions: InAppWebViewGroupOptions(
-                      android: AndroidInAppWebViewOptions(useHybridComposition: true),
+                      android: AndroidInAppWebViewOptions(
+                          useHybridComposition: true),
                       crossPlatform: InAppWebViewOptions(
                         useShouldOverrideUrlLoading: true,
                         javaScriptEnabled: true,
                       ),
                     ),
                     gestureRecognizers: Set()
-                      ..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
+                      ..add(Factory<VerticalDragGestureRecognizer>(
+                          () => VerticalDragGestureRecognizer())),
                     initialUrlRequest: URLRequest(
                       url: Uri.parse(widget.url),
                     ),
@@ -74,7 +77,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
                           child: CircularProgressIndicator.adaptive(),
                         ),
                       ),
-                      crossFadeState: _isLoading ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                      crossFadeState: _isLoading
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
                       duration: const Duration(milliseconds: 300),
                     ),
                   ),

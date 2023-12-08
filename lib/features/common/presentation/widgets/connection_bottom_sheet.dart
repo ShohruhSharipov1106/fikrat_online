@@ -1,4 +1,4 @@
-// import 'package:app_settings/app_settings.dart';
+import 'package:fikrat_online/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,12 +8,12 @@ import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.d
 import 'package:fikrat_online/features/common/presentation/bloc/connectivity_bloc/connectivity_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/small_container.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/w_button.dart';
-import 'package:fikrat_online/generated/locale_keys.g.dart';
 
 showConnectionBottomSheet(BuildContext context) {
   showModalBottomSheet(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
       ),
       isDismissible: true,
       context: context,
@@ -47,7 +47,8 @@ class ConnectionBottomSheet extends StatelessWidget {
                   color: white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                 ),
-                padding: EdgeInsets.fromLTRB(12, 24, 12, 12 + MediaQuery.paddingOf(context).bottom),
+                padding: EdgeInsets.fromLTRB(
+                    12, 24, 12, 12 + MediaQuery.paddingOf(context).bottom),
                 child: BlocBuilder<LocalesBloc, LocalesState>(
                   builder: (context, state) {
                     return Column(
@@ -61,15 +62,25 @@ class ConnectionBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 32),
                         Text(
-                          context.read<LocalesBloc>().translate(LocaleKeys.net_break),
+                          context
+                              .read<LocalesBloc>()
+                              .translate(LocaleKeys.net_break),
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 15),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 15),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          context.read<LocalesBloc>().translate(LocaleKeys.check_net),
+                          context
+                              .read<LocalesBloc>()
+                              .translate(LocaleKeys.check_net),
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.w400),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(fontWeight: FontWeight.w400),
                           maxLines: 3,
                         ),
                         const SizedBox(height: 24),

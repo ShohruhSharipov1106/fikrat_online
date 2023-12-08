@@ -54,9 +54,10 @@ class ProfileAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(color: borderColor, width: 1),
-              color: errorFillColor ?? seaMist,
+              color: errorFillColor ?? dodgerBlue,
             ),
-            child: SvgPicture.asset(defaultIcon ?? AppIcons.user),
+            // TODO CHANGE TO USER ICON
+            child: SvgPicture.asset(defaultIcon ?? AppIcons.activeIcon),
           );
         },
         imageBuilder: (context, imageProvider) {
@@ -67,7 +68,7 @@ class ProfileAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(color: borderColor, width: 1),
-              color: backgroudColor ?? dark.withOpacity(.5),
+              color: backgroudColor ?? black.withOpacity(.5),
             ),
             child: imagePicture.contains(".svg")
                 ? SvgPicture.network(imagePicture)
@@ -89,11 +90,11 @@ class ProfileAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(color: borderColor, width: 1),
-              color: errorFillColor ?? seaMist,
+              color: errorFillColor ?? dodgerBlue,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
-              child: SvgPicture.asset(defaultIcon ?? AppIcons.user),
+              child: SvgPicture.asset(defaultIcon ?? AppIcons.activeIcon),
             ),
           );
         },
@@ -107,7 +108,7 @@ class ProfileAvatar extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),
           border: Border.all(color: borderColor, width: 1),
-          color: color ?? grey,
+          color: color ?? shuttleGrey,
         ),
         child: SvgPicture.asset(
           defaultIcon ?? imagePicture,

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
 import 'package:fikrat_online/assets/constants/icons.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 
 class MessageContainer extends StatelessWidget {
   final String message;
@@ -32,11 +29,14 @@ class MessageContainer extends StatelessWidget {
       child: Row(
         children: [
           if (isSuccess) ...{
-            SvgPicture.asset(AppIcons.tickCircle)
+            // TODO CHANGE ICON FOR SUCCESS CASE
+            SvgPicture.asset(AppIcons.success)
           } else if (isDislikeMessage) ...{
-            SvgPicture.asset(AppIcons.infoCircle)
+            // TODO CHANGE ICON FOR PENDING CASE
+            SvgPicture.asset(AppIcons.waiting)
           } else ...{
-            SvgPicture.asset(AppIcons.danger)
+            // TODO CHANGE ICON FOR ERROR CASE
+            SvgPicture.asset(AppIcons.errorIcon)
           },
           const SizedBox(width: 12),
           Expanded(
