@@ -1,125 +1,213 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:fikrat_online/assets/themes/theme.dart';
+import 'package:fikrat_online/core/data/singletons/service_locator.dart';
+import 'package:fikrat_online/core/data/singletons/storage.dart';
+import 'package:fikrat_online/features/auth/data/repositories/authentication_repository_impl.dart';
+import 'package:fikrat_online/features/auth/domain/entities/authentication_status.dart';
+import 'package:fikrat_online/features/auth/domain/usecases/get_authentication_status_usecase.dart';
+import 'package:fikrat_online/features/auth/presentation/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:fikrat_online/features/auth/presentation/pages/splash.dart';
+import 'package:fikrat_online/features/common/domain/repositories/connectivity_repository.dart';
+import 'package:fikrat_online/features/common/presentation/bloc/connectivity_bloc/connectivity_bloc.dart';
+import 'package:fikrat_online/features/common/presentation/bloc/deep_link_bloc/deep_link_bloc.dart';
+import 'package:fikrat_online/features/common/presentation/bloc/show_pop_up/show_pop_up_bloc.dart';
+import 'package:fikrat_online/features/navigation/presentation/home.dart';
+import 'package:fikrat_online/firebase_options.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+bool serviceStatus = true;
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  await DefaultCacheManager().emptyCache();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  await setupLocator();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await StorageRepository.putString(StoreKeys.version, packageInfo.version);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  runZonedGuarded(() {
+    runApp(
+      EasyLocalization(
+        supportedLocales: const [
+          Locale('uz'),
+          Locale('uk'),
+          Locale('ru'),
+          Locale('en'),
+          Locale('ka'),
+        ],
+        path: 'lib/assets/translations',
+        fallbackLocale: const Locale('uz'),
+        startLocale: const Locale('uz'),
+        child: const App(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
+  }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  });
+  HttpOverrides.global = MyHttpOverrides();
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class App extends StatefulWidget {
+  const App({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<App> createState() => _AppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AppState extends State<App> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  NavigatorState get navigator => _navigatorKey.currentState!;
+  late ConnectivityRepository connectivityRepository;
+  late ConnectivityBloc connectivityBloc;
+
+  @override
+  void initState() {
+    connectivityRepository = ConnectivityRepository();
+    connectivityBloc = ConnectivityBloc(connectivityRepository)
+      ..add(const ConnectivityEvent.setup());
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return MultiRepositoryProvider(
+      providers: [RepositoryProvider.value(value: connectivityRepository)],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthenticationBloc(
+              statusUseCase: GetAuthenticationStatusUseCase(
+                repository: serviceLocator<AuthenticationRepositoryImpl>(),
+              ),
+              getUserDataUseCase: GetProfileUseCase(
+                profileRepository: serviceLocator<ProfileRepositoryImpl>(),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          BlocProvider(
+              create: (context) => SiteSettingsBloc()
+                ..add(const SiteSettingsEvent.getAboutInformation())
+                ..add(const SiteSettingsEvent.getServiceStatus())),
+          BlocProvider(
+            create: (context) => ProfileBloc(
+                getProfileUseCase: GetProfileUseCase(
+                    profileRepository: serviceLocator<ProfileRepositoryImpl>()),
+                updateProfileUseCase: UpdateProfileUseCase(
+                  profileRepository: serviceLocator<ProfileRepositoryImpl>(),
+                ),
+                sendForChangePhoneUseCase: SendForChangePhoneUseCase(
+                  repository: serviceLocator<ProfileRepositoryImpl>(),
+                ),
+                changePhoneUseCase: ChangePhoneUseCase(
+                  repository: serviceLocator<ProfileRepositoryImpl>(),
+                ),
+                checkUserNameUseCase: CheckUserNameUseCase(
+                    repository: serviceLocator<ProfileRepositoryImpl>()),
+                deleteUserUseCase: DeleteUserUseCase(
+                    repository: serviceLocator<ProfileRepositoryImpl>())),
+          ),
+          BlocProvider(
+              create: (context) => WebinarsBloc(
+                  createWebinarUsecase: CreateWebinarUsecase(
+                      repository: serviceLocator<WebinarRepoImpl>()),
+                  webinarDetailUsecase: GetWebinarDetailUsecase(
+                      repository: serviceLocator<WebinarRepoImpl>()),
+                  webinarUsecase: GetWebinarsUsecase(
+                      repository: serviceLocator<WebinarRepoImpl>()))),
+          BlocProvider.value(
+            value: connectivityBloc,
+          ),
+          BlocProvider(create: (context) => ShowPopUpBloc()),
+          BlocProvider(create: (context) => DeepLinkBloc()),
+        ],
+        child: AnnotatedRegion(
+          value: const SystemUiOverlayStyle(
+              statusBarColor: Colors.white,
+              systemNavigationBarColor: Colors.white,
+              statusBarBrightness: Brightness.light,
+              systemNavigationBarIconBrightness: Brightness.dark),
+          child: MaterialApp(
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
+            locale: context.locale,
+            debugShowCheckedModeBanner: false,
+            title: 'Ayol Uchun',
+            navigatorKey: _navigatorKey,
+            theme: AppTheme.theme(),
+            builder: (context, child) {
+              return BlocListener<AuthenticationBloc, AuthenticationState>(
+                listener: (context, state) {
+                  switch (state.status) {
+                    case AuthenticationStatus.unauthenticated:
+                      if (StorageRepository.getBool(StoreKeys.onboarding)) {
+                        navigator.pushAndRemoveUntil(
+                            MaterialWithModalsPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                            (route) => false);
+                      } else {
+                        navigator.pushAndRemoveUntil(
+                            fade(page: const OnBoardingScreen()),
+                            (route) => false);
+                      }
+                      break;
+                    case AuthenticationStatus.authenticated:
+                      navigator.pushAndRemoveUntil(
+                          MaterialWithModalsPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                          (route) => false);
+                      break;
+                  }
+                },
+                child: child,
+              );
+            },
+
+            onGenerateRoute: (_) => MaterialPageRoute(
+              builder: (_) => const SplashScreen(),
             ),
-          ],
+            // onGenerateRoute: (_) => MaterialPageRoute(
+            //   builder: (_) => const ,
+            // ),
+            // home: const LoginScreen(),
+            // SplashScreen.route(),
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

@@ -46,7 +46,7 @@ class AppIcons {
   static const String earth = 'assets/icons/earth.svg';
   static const String afisha = 'assets/icons/afisha.svg';
   static const String file = 'assets/icons/file.svg';
-  static const String ayolUchun = 'assets/icons/ayol_uchun.svg';
+  static const String ayolUchun = 'assets/icons/fikrat_online.svg';
   static const String uic = 'assets/icons/uic.svg';
   static const String liveIcon = 'assets/icons/live_icon.svg';
   static const String finishIcon = 'assets/icons/finish_icon.svg';
@@ -114,7 +114,7 @@ class AppIcons {
   static const String gallery = 'assets/icons/profile/gallery.svg';
   static const String delete = 'assets/icons/profile/delete.svg';
   static const String chevron1 = 'assets/icons/arrow_right_w.svg';
-  static const String ayoluchun = 'assets/icons/ayol_uchun.svg';
+  static const String ayoluchun = 'assets/icons/fikrat_online.svg';
   static const String ayoluchun_loading = 'assets/images/Vector.png';
   static const String ads = 'assets/images/ads.png';
   static const String promocode = 'assets/icons/promocode.svg';

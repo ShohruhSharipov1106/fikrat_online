@@ -1,6 +1,6 @@
+import 'package:fikrat_online/features/downloads/downloads_screen.dart';
 import 'package:fikrat_online/features/live_stream/live_stream_screen.dart';
 import 'package:fikrat_online/features/profile/profile_screen.dart';
-import 'package:fikrat_online/features/saveds/saveds_screen.dart';
 import 'package:fikrat_online/features/search/search_screen.dart';
 import 'package:fikrat_online/features/navigation/presentation/bloc/home_bloc.dart';
 import 'package:fikrat_online/features/navigation/presentation/home.dart';
@@ -45,7 +45,7 @@ class _TabNavigatorState extends State<TabNavigator>
         };
       case NavItemEnum.saved:
         return {
-          TabNavigatorRoutes.root: (context) => const SavedsScreen(),
+          TabNavigatorRoutes.root: (context) => const DownloadsScreen(),
         };
       case NavItemEnum.profile:
         return {
