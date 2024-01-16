@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:fikrat_online/core/exceptions/failures.dart';
 import 'package:fikrat_online/features/auth/domain/entities/social_network_type.dart';
 import 'package:fikrat_online/features/auth/domain/usecases/social_login_usecase.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 

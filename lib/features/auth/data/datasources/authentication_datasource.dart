@@ -1,5 +1,6 @@
 import 'package:fikrat_online/core/data/singletons/storage.dart';
 import 'package:fikrat_online/core/exceptions/exceptions.dart';
+import 'package:fikrat_online/core/utils/my_functions.dart';
 import 'package:fikrat_online/features/auth/data/models/error_status.dart';
 import 'package:fikrat_online/features/auth/data/models/user_model.dart';
 import 'package:fikrat_online/features/auth/domain/entities/login_params.dart';
@@ -23,54 +24,35 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
   @override
   Future<String> submitPhone({required String phone}) async {
-    if (phone.isNotEmpty) {
-      try {
-        final response =
-            await _dio.post('/users/SendAuthVerificationCode', data: {
-          "phone": phone,
-        });
-        if (response.statusCode != null &&
-            response.statusCode! >= 200 &&
-            response.statusCode! < 300) {
-          return response.data['session'] as String;
-        } else {
-          if (response.data is Map) {
-            final errorMessage = ErrorStatusModel.fromJson(response.data);
-            if (errorMessage.errors.isNotEmpty) {
-              throw ServerException(
-                errorMessage: errorMessage.errors.first.message,
-                statusCode: response.statusCode!,
-              );
-            } else {
-              throw ServerException(
-                errorMessage: response.data['errors'][0]['message'].toString(),
-                statusCode: response.statusCode!,
-              );
-            }
-          } else {
-            if (response.data is Map) {
-              throw ServerException(
-                  statusCode: response.statusCode!,
-                  errorMessage:
-                      response.data['errors'][0]['message'].toString());
-            } else {
-              throw ServerException(
-                  statusCode: response.statusCode!,
-                  errorMessage:
-                      response.data['errors'][0]['message'].toString());
-            }
-          }
-        }
-      } on ServerException {
-        rethrow;
-      } on DioException {
-        throw DioExceptions();
-      } on Exception catch (e) {
-        throw ParsingException(errorMessage: e.toString());
+    try {
+      final response =
+          await _dio.post('/users/SendAuthVerificationCode', data: {
+        "phone": phone,
+      });
+      if (response.statusCode != null &&
+          response.statusCode! >= 200 &&
+          response.statusCode! < 300) {
+        return '';
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode ?? 400,
+          errorMessage: MyFunctions.getErrorMessage(response: response.data),
+        );
       }
-    } else {
-      throw const ParsingException(
-          errorMessage: 'LocaleKeys.phone_number_cannot_be_empty');
+    } on ServerException catch (e) {
+      throw ServerException(
+          statusCode: e.statusCode,
+          errorMessage: MyFunctions.getErrorMessage(response: e.errorMessage));
+    } on DioException catch (e) {
+      throw DioExceptions(
+          statusCode: e.response?.statusCode ?? 400,
+          errorMessage:
+              MyFunctions.getErrorMessage(response: e.response?.data));
+    } on Exception catch (e) {
+      throw ParsingException(
+        statusCode: 422,
+        errorMessage: MyFunctions.getErrorMessage(response: e.toString()),
+      );
     }
   }
 
@@ -86,25 +68,25 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
           response.statusCode! < 300) {
         return UserModel.fromJson(response.data);
       } else {
-        if (response.data is Map) {
-          throw ServerException(
-              statusCode: response.statusCode!,
-              errorMessage: ((response.data as Map).values.isNotEmpty
-                      ? (response.data as Map).values.first
-                      : 'LocaleKeys.error_while_get_user')
-                  .toString());
-        } else {
-          throw ServerException(
-              statusCode: response.statusCode!,
-              errorMessage: response.data['errors'][0]['message'].toString());
-        }
+        throw ServerException(
+          statusCode: response.statusCode ?? 400,
+          errorMessage: MyFunctions.getErrorMessage(response: response.data),
+        );
       }
-    } on ServerException {
-      rethrow;
-    } on DioException {
-      throw DioExceptions();
+    } on ServerException catch (e) {
+      throw ServerException(
+          statusCode: e.statusCode,
+          errorMessage: MyFunctions.getErrorMessage(response: e.errorMessage));
+    } on DioException catch (e) {
+      throw DioExceptions(
+          statusCode: e.response?.statusCode ?? 400,
+          errorMessage:
+              MyFunctions.getErrorMessage(response: e.response?.data));
     } on Exception catch (e) {
-      throw ParsingException(errorMessage: e.toString());
+      throw ParsingException(
+        statusCode: 422,
+        errorMessage: MyFunctions.getErrorMessage(response: e.toString()),
+      );
     }
   }
 
@@ -124,34 +106,25 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
         await StorageRepository.putString(
             StoreKeys.refresh, "${response.data['refresh']}");
       } else {
-        if (response.data is Map) {
-          throw ServerException(
-              statusCode: response.statusCode!,
-              errorMessage: ((response.data as Map).values.isNotEmpty
-                      ? (response.data as Map).values.first
-                      : 'LocaleKeys.phone_number_error')
-                  .toString());
-        } else {
-          if (response.data is Map) {
-            throw ServerException(
-                statusCode: response.statusCode!,
-                errorMessage: ((response.data as Map).values.isNotEmpty
-                        ? (response.data as Map).values.first
-                        : '')
-                    .toString());
-          } else {
-            throw ServerException(
-                statusCode: response.statusCode!,
-                errorMessage: response.data['errors'][0]['message'].toString());
-          }
-        }
+        throw ServerException(
+          statusCode: response.statusCode ?? 400,
+          errorMessage: MyFunctions.getErrorMessage(response: response.data),
+        );
       }
-    } on ServerException {
-      rethrow;
-    } on DioException {
-      throw DioExceptions();
+    } on ServerException catch (e) {
+      throw ServerException(
+          statusCode: e.statusCode,
+          errorMessage: MyFunctions.getErrorMessage(response: e.errorMessage));
+    } on DioException catch (e) {
+      throw DioExceptions(
+          statusCode: e.response?.statusCode ?? 400,
+          errorMessage:
+              MyFunctions.getErrorMessage(response: e.response?.data));
     } on Exception catch (e) {
-      throw ParsingException(errorMessage: e.toString());
+      throw ParsingException(
+        statusCode: 422,
+        errorMessage: MyFunctions.getErrorMessage(response: e.toString()),
+      );
     }
   }
 
@@ -207,12 +180,20 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
             statusCode: response.statusCode!,
             errorMessage: response.data.toString());
       }
-    } on ServerException {
-      rethrow;
-    } on DioException {
-      throw DioExceptions();
+    } on ServerException catch (e) {
+      throw ServerException(
+          statusCode: e.statusCode,
+          errorMessage: MyFunctions.getErrorMessage(response: e.errorMessage));
+    } on DioException catch (e) {
+      throw DioExceptions(
+          statusCode: e.response?.statusCode ?? 400,
+          errorMessage:
+              MyFunctions.getErrorMessage(response: e.response?.data));
     } on Exception catch (e) {
-      throw ParsingException(errorMessage: e.toString());
+      throw ParsingException(
+        statusCode: 422,
+        errorMessage: MyFunctions.getErrorMessage(response: e.toString()),
+      );
     }
   }
 }

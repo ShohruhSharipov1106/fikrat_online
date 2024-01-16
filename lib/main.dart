@@ -4,10 +4,9 @@ import 'dart:io';
 import 'package:fikrat_online/assets/themes/theme.dart';
 import 'package:fikrat_online/core/data/singletons/service_locator.dart';
 import 'package:fikrat_online/core/data/singletons/storage.dart';
-import 'package:fikrat_online/features/auth/data/repositories/authentication_repository_impl.dart';
 import 'package:fikrat_online/features/auth/domain/entities/authentication_status.dart';
-import 'package:fikrat_online/features/auth/domain/usecases/get_authentication_status_usecase.dart';
 import 'package:fikrat_online/features/auth/presentation/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:fikrat_online/features/auth/presentation/pages/onboarding_screen.dart';
 import 'package:fikrat_online/features/auth/presentation/pages/splash.dart';
 import 'package:fikrat_online/features/common/domain/repositories/connectivity_repository.dart';
 import 'package:fikrat_online/features/common/presentation/bloc/connectivity_bloc/connectivity_bloc.dart';
@@ -18,26 +17,20 @@ import 'package:fikrat_online/firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
-bool serviceStatus = true;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await DefaultCacheManager().emptyCache();
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
   await setupLocator();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await StorageRepository.putString(StoreKeys.version, packageInfo.version);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -96,7 +89,7 @@ class _AppState extends State<App> {
   void initState() {
     connectivityRepository = ConnectivityRepository();
     connectivityBloc = ConnectivityBloc(connectivityRepository)
-      ..add(const ConnectivityEvent.setup());
+      ..add(const SetupConnectivity());
 
     super.initState();
   }
@@ -107,49 +100,17 @@ class _AppState extends State<App> {
       providers: [RepositoryProvider.value(value: connectivityRepository)],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => AuthenticationBloc(
-              statusUseCase: GetAuthenticationStatusUseCase(
-                repository: serviceLocator<AuthenticationRepositoryImpl>(),
-              ),
-              getUserDataUseCase: GetProfileUseCase(
-                profileRepository: serviceLocator<ProfileRepositoryImpl>(),
-              ),
-            ),
-          ),
-          BlocProvider(
-              create: (context) => SiteSettingsBloc()
-                ..add(const SiteSettingsEvent.getAboutInformation())
-                ..add(const SiteSettingsEvent.getServiceStatus())),
-          BlocProvider(
-            create: (context) => ProfileBloc(
-                getProfileUseCase: GetProfileUseCase(
-                    profileRepository: serviceLocator<ProfileRepositoryImpl>()),
-                updateProfileUseCase: UpdateProfileUseCase(
-                  profileRepository: serviceLocator<ProfileRepositoryImpl>(),
-                ),
-                sendForChangePhoneUseCase: SendForChangePhoneUseCase(
-                  repository: serviceLocator<ProfileRepositoryImpl>(),
-                ),
-                changePhoneUseCase: ChangePhoneUseCase(
-                  repository: serviceLocator<ProfileRepositoryImpl>(),
-                ),
-                checkUserNameUseCase: CheckUserNameUseCase(
-                    repository: serviceLocator<ProfileRepositoryImpl>()),
-                deleteUserUseCase: DeleteUserUseCase(
-                    repository: serviceLocator<ProfileRepositoryImpl>())),
-          ),
-          BlocProvider(
-              create: (context) => WebinarsBloc(
-                  createWebinarUsecase: CreateWebinarUsecase(
-                      repository: serviceLocator<WebinarRepoImpl>()),
-                  webinarDetailUsecase: GetWebinarDetailUsecase(
-                      repository: serviceLocator<WebinarRepoImpl>()),
-                  webinarUsecase: GetWebinarsUsecase(
-                      repository: serviceLocator<WebinarRepoImpl>()))),
-          BlocProvider.value(
-            value: connectivityBloc,
-          ),
+          // BlocProvider(
+          //   create: (context) => AuthenticationBloc(
+          //     statusUseCase: GetAuthenticationStatusUseCase(
+          //       repository: serviceLocator<AuthenticationRepositoryImpl>(),
+          //     ),
+          //     getUserDataUseCase: GetUserDataUseCase(
+          //       repository: serviceLocator<ProfileRepositoryImpl>(),
+          //     ),
+          //   ),
+          // ),
+          BlocProvider.value(value: connectivityBloc),
           BlocProvider(create: (context) => ShowPopUpBloc()),
           BlocProvider(create: (context) => DeepLinkBloc()),
         ],
@@ -180,7 +141,9 @@ class _AppState extends State<App> {
                             (route) => false);
                       } else {
                         navigator.pushAndRemoveUntil(
-                            fade(page: const OnBoardingScreen()),
+                            CupertinoPageRoute(
+                              builder: (context) => const OnboardingScreen(),
+                            ),
                             (route) => false);
                       }
                       break;

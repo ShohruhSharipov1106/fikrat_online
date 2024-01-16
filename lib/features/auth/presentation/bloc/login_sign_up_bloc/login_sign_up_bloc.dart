@@ -3,10 +3,9 @@ import 'package:fikrat_online/features/auth/domain/entities/login_params.dart';
 import 'package:fikrat_online/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fikrat_online/features/auth/domain/usecases/submit_phone.dart';
 import 'package:fikrat_online/generated/locale_keys.g.dart';
-import 'package:bloc/bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 part 'login_sign_up_event.dart';
@@ -44,7 +43,7 @@ class LoginSignUpBloc extends Bloc<LoginSignUpEvent, LoginSignUpState> {
         } else if (result.left is ServerFailure) {
           if ((result.left as ServerFailure).errorMessage ==
               "The phone number entered is not valid.") {
-            event.onError(LocaleKeys.phone_number_is_not_valid.tr());
+            event.onError("LocaleKeys.phone_number_is_not_valid.tr()");
           } else {
             event.onError((result.left as ServerFailure).errorMessage);
           }

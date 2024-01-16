@@ -9,7 +9,6 @@ import 'package:fikrat_online/features/auth/domain/entities/login_params.dart';
 import 'package:fikrat_online/features/auth/domain/entities/social_network_type.dart';
 import 'package:fikrat_online/features/auth/domain/entities/user_entity.dart';
 import 'package:fikrat_online/features/auth/domain/repositories/authentication_repository.dart';
-import 'package:dio/dio.dart';
 
 class AuthenticationRepositoryImpl extends AuthenticationRepository {
   final AuthenticationDataSource dataSource;
@@ -39,12 +38,14 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     try {
       final result = await dataSource.getUserData();
       return Right(result);
-    } on DioException {
-      return Left(DioFailure());
-    } on ParsingException catch (e) {
-      return Left(ParsingFailure(errorMessage: e.errorMessage));
     } on ServerException catch (e) {
       return Left(ServerFailure(
+          statusCode: e.statusCode, errorMessage: e.errorMessage));
+    } on DioExceptions catch (e) {
+      return Left(
+          DioFailure(errorMessage: e.errorMessage, statusCode: e.statusCode));
+    } on ParsingException catch (e) {
+      return Left(ParsingFailure(
           errorMessage: e.errorMessage, statusCode: e.statusCode));
     }
   }
@@ -59,12 +60,14 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           .getLogin(LoginParams(code: code, session: session, phone: phone));
       _statusController.add(AuthenticationStatus.authenticated);
       return Right(result);
-    } on DioException {
-      return Left(DioFailure());
-    } on ParsingException catch (e) {
-      return Left(ParsingFailure(errorMessage: e.errorMessage));
     } on ServerException catch (e) {
       return Left(ServerFailure(
+          statusCode: e.statusCode, errorMessage: e.errorMessage));
+    } on DioExceptions catch (e) {
+      return Left(
+          DioFailure(errorMessage: e.errorMessage, statusCode: e.statusCode));
+    } on ParsingException catch (e) {
+      return Left(ParsingFailure(
           errorMessage: e.errorMessage, statusCode: e.statusCode));
     }
   }
@@ -75,12 +78,14 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       final result = await dataSource.submitPhone(phone: phone);
       _statusController.add(AuthenticationStatus.authenticated);
       return Right(result);
-    } on DioException {
-      return Left(DioFailure());
-    } on ParsingException catch (e) {
-      return Left(ParsingFailure(errorMessage: e.errorMessage));
     } on ServerException catch (e) {
       return Left(ServerFailure(
+          statusCode: e.statusCode, errorMessage: e.errorMessage));
+    } on DioExceptions catch (e) {
+      return Left(
+          DioFailure(errorMessage: e.errorMessage, statusCode: e.statusCode));
+    } on ParsingException catch (e) {
+      return Left(ParsingFailure(
           errorMessage: e.errorMessage, statusCode: e.statusCode));
     }
   }
@@ -113,12 +118,14 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           code: code);
       _statusController.add(AuthenticationStatus.authenticated);
       return Right(result);
-    } on DioException {
-      return Left(DioFailure());
-    } on ParsingException catch (e) {
-      return Left(ParsingFailure(errorMessage: e.errorMessage));
     } on ServerException catch (e) {
       return Left(ServerFailure(
+          statusCode: e.statusCode, errorMessage: e.errorMessage));
+    } on DioExceptions catch (e) {
+      return Left(
+          DioFailure(errorMessage: e.errorMessage, statusCode: e.statusCode));
+    } on ParsingException catch (e) {
+      return Left(ParsingFailure(
           errorMessage: e.errorMessage, statusCode: e.statusCode));
     }
   }

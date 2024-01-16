@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 
 GetIt serviceLocator = GetIt.I;
 
-Future<void> setupLocator({required GetIt serviceLocator, required String baseIdUrl}) async {
+Future<void> setupLocator() async {
   await StorageRepository.getInstance();
 
   serviceLocator.registerLazySingleton(() => DioSettings());
@@ -15,7 +15,6 @@ Future<void> setupLocator({required GetIt serviceLocator, required String baseId
 
   // serviceLocator.registerLazySingleton(
   //     () => AuthenticationRepositoryImpl(dataSource: serviceLokator<AuthenticationDataSourceImpl>()));
-
 
   ///
 
@@ -33,5 +32,4 @@ Future<void> setupLocator({required GetIt serviceLocator, required String baseId
   //     .registerLazySingleton(() => ProfileRepositoryImpl(profileDatasource: serviceLokator<ProfileDataSourceImpl>()));
 
   ///
-
-  }
+}
