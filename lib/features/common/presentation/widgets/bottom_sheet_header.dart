@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
 import 'package:fikrat_online/assets/constants/icons.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/w_scale_animation.dart';
 
 class BottomSheetHeader extends StatelessWidget {
@@ -47,28 +46,24 @@ class BottomSheetHeader extends StatelessWidget {
         },
         const SizedBox(width: 12),
         if (centerTitle) ...{
-          Expanded(child: Center(child: BlocBuilder<LocalesBloc, LocalesState>(
-            builder: (context, state) {
-              return Text(
-                context.read<LocalesBloc>().translate(title),
+          Expanded(
+            child: Center(
+              child: Text(
+                title,
                 style: titleStyle ?? Theme.of(context).textTheme.bodyLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-              );
-            },
-          ))),
+              ),
+            ),
+          ),
         } else ...{
-          BlocBuilder<LocalesBloc, LocalesState>(
-            builder: (context, state) {
-              return Expanded(
-                child: Text(
-                  context.read<LocalesBloc>().translate(title),
-                  style: titleStyle ?? Theme.of(context).textTheme.bodyLarge,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              );
-            },
+          Expanded(
+            child: Text(
+              title,
+              style: titleStyle ?? Theme.of(context).textTheme.bodyLarge,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           // const Spacer(),
         },

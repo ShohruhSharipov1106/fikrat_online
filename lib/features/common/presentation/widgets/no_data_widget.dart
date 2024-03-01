@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 
 class NoDataWidget extends StatelessWidget {
   final String icon;
@@ -44,25 +43,16 @@ class NoDataWidget extends StatelessWidget {
                 color: iconColor,
               ),
               SizedBox(height: separator),
-              BlocBuilder<LocalesBloc, LocalesState>(
-                builder: (context, state) {
-                  return Text(
-                    context.read<LocalesBloc>().translate(title),
-                    style: titleStyle ?? Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  );
-                },
+              Text(
+                title,
+                style: titleStyle ?? Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
-              BlocBuilder<LocalesBloc, LocalesState>(
-                builder: (context, state) {
-                  return Text(
-                    context.read<LocalesBloc>().translate(subtitle),
-                    style:
-                        subtitleStyle ?? Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
-                  );
-                },
+              Text(
+                subtitle,
+                style: subtitleStyle ?? Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
               ),
               if (bottom != null) ...{bottom!},
             ],

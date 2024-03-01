@@ -1,4 +1,3 @@
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fikrat_online/features/navigation/domain/entities/navbar.dart';
 import 'package:flutter/material.dart';
@@ -35,24 +34,20 @@ class NavItemWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Container(
             alignment: Alignment.bottomCenter,
-            child: BlocBuilder<LocalesBloc, LocalesState>(
-              builder: (context, state) {
-                return Text(
-                  context.read<LocalesBloc>().translate(navBar.title),
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  style: currentIndex == navBar.id
-                      ? Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(fontSize: 10)
-                      : Theme.of(context).textTheme.titleMedium!.copyWith(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                          ),
-                );
-              },
+            child: Text(
+              navBar.title,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              style: currentIndex == navBar.id
+                  ? Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(fontSize: 10)
+                  : Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
             ),
           ),
         ],

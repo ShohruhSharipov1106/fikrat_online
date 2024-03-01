@@ -4,7 +4,10 @@ import 'dart:io';
 import 'package:fikrat_online/assets/themes/theme.dart';
 import 'package:fikrat_online/core/data/singletons/service_locator.dart';
 import 'package:fikrat_online/core/data/singletons/storage.dart';
+import 'package:fikrat_online/features/auth/data/repositories/authentication_repository_impl.dart';
 import 'package:fikrat_online/features/auth/domain/entities/authentication_status.dart';
+import 'package:fikrat_online/features/auth/domain/usecases/get_authentication_status_usecase.dart';
+import 'package:fikrat_online/features/auth/domain/usecases/get_user_data_usecase.dart';
 import 'package:fikrat_online/features/auth/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:fikrat_online/features/auth/presentation/pages/onboarding_screen.dart';
 import 'package:fikrat_online/features/auth/presentation/pages/splash.dart';
@@ -13,6 +16,7 @@ import 'package:fikrat_online/features/common/presentation/bloc/connectivity_blo
 import 'package:fikrat_online/features/common/presentation/bloc/deep_link_bloc/deep_link_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/bloc/show_pop_up/show_pop_up_bloc.dart';
 import 'package:fikrat_online/features/navigation/presentation/home.dart';
+import 'package:fikrat_online/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:fikrat_online/firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,35 +44,25 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  runZonedGuarded(() {
-    runApp(
-      EasyLocalization(
-        supportedLocales: const [
-          Locale('uz'),
-          Locale('uk'),
-          Locale('ru'),
-          Locale('en'),
-          Locale('ka'),
-        ],
-        path: 'lib/assets/translations',
-        fallbackLocale: const Locale('uz'),
-        startLocale: const Locale('uz'),
-        child: const App(),
-      ),
-    );
-  }, (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-  });
-  HttpOverrides.global = MyHttpOverrides();
-}
-
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
+  // runZonedGuarded(() {
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('uz'),
+        Locale('uk'),
+        Locale('ru'),
+        Locale('en'),
+        Locale('ka'),
+      ],
+      path: 'lib/assets/translations',
+      fallbackLocale: const Locale('uz'),
+      startLocale: const Locale('uz'),
+      child: const App(),
+    ),
+  );
+  // }, (error, stack) {
+  //   FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  // });
 }
 
 class App extends StatefulWidget {
@@ -100,16 +94,16 @@ class _AppState extends State<App> {
       providers: [RepositoryProvider.value(value: connectivityRepository)],
       child: MultiBlocProvider(
         providers: [
-          // BlocProvider(
-          //   create: (context) => AuthenticationBloc(
-          //     statusUseCase: GetAuthenticationStatusUseCase(
-          //       repository: serviceLocator<AuthenticationRepositoryImpl>(),
-          //     ),
-          //     getUserDataUseCase: GetUserDataUseCase(
-          //       repository: serviceLocator<ProfileRepositoryImpl>(),
-          //     ),
-          //   ),
-          // ),
+          BlocProvider(
+            create: (context) => AuthenticationBloc(
+              statusUseCase: GetAuthenticationStatusUseCase(
+                repository: serviceLocator<AuthenticationRepositoryImpl>(),
+              ),
+              getUserDataUseCase: GetUserDataUseCase(
+                repository: serviceLocator<ProfileRepositoryImpl>(),
+              ),
+            ),
+          ),
           BlocProvider.value(value: connectivityBloc),
           BlocProvider(create: (context) => ShowPopUpBloc()),
           BlocProvider(create: (context) => DeepLinkBloc()),

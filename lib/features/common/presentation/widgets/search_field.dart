@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
 import 'package:fikrat_online/assets/constants/icons.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/w_scale_animation.dart';
 import 'package:fikrat_online/generated/locale_keys.g.dart';
 
@@ -73,78 +72,73 @@ class _SearchFieldState extends State<SearchField> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      child: BlocBuilder<LocalesBloc, LocalesState>(
-        builder: (context, state) {
-          return TextFormField(
-            readOnly: widget.readOnly,
-            cursorHeight: 20,
-            cursorColor: black,
-            cursorWidth: 1,
-            autofocus: widget.focus,
-            key: widget.stateKey,
-            focusNode: focusNode,
-            controller: _controller,
-            onChanged: widget.onChanged,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            textInputAction: TextInputAction.search,
-            style: widget.textStyle ??
-                Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              fillColor: focusNode.hasFocus ? widget.fillColor : ghost,
-              filled: true,
-              suffixIconConstraints: const BoxConstraints(maxWidth: 40),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 8, 0, 8),
-                child: Center(
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 20,
-                    height: 20,
-                    fit: BoxFit.cover,
-                    color: tabGrey,
-                  ),
+      child: TextFormField(
+        readOnly: widget.readOnly,
+        cursorHeight: 20,
+        cursorColor: black,
+        cursorWidth: 1,
+        autofocus: widget.focus,
+        key: widget.stateKey,
+        focusNode: focusNode,
+        controller: _controller,
+        onChanged: widget.onChanged,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        textInputAction: TextInputAction.search,
+        style: widget.textStyle ??
+            Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
                 ),
-              ),
-              hintText:
-                  context.read<LocalesBloc>().translate(LocaleKeys.search),
-              hintStyle: Theme.of(context).textTheme.titleMedium,
-              prefixIconConstraints: const BoxConstraints(maxWidth: 40),
-              suffixIcon: _controller.text.isNotEmpty
-                  ? WScaleAnimation(
-                      onTap: () {
-                        setState(() {
-                          _controller.clear();
-                        });
-                        widget.onClear == null ? null : widget.onClear!(true);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 12, 0),
-                        child: SvgPicture.asset(AppIcons.clear),
-                      ),
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-                borderSide: BorderSide(
-                  color: widget.hasBorder ? ghost : Colors.transparent,
-                  width: 1.6,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-                borderSide:
-                    BorderSide(color: widget.focusedBorderColor, width: 1.6),
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          fillColor: focusNode.hasFocus ? widget.fillColor : ghost,
+          filled: true,
+          suffixIconConstraints: const BoxConstraints(maxWidth: 40),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(12, 8, 0, 8),
+            child: Center(
+              child: SvgPicture.asset(
+                AppIcons.search,
+                width: 20,
+                height: 20,
+                fit: BoxFit.cover,
+                color: tabGrey,
               ),
             ),
-          );
-        },
+          ),
+          hintText: LocaleKeys.search,
+          hintStyle: Theme.of(context).textTheme.titleMedium,
+          prefixIconConstraints: const BoxConstraints(maxWidth: 40),
+          suffixIcon: _controller.text.isNotEmpty
+              ? WScaleAnimation(
+                  onTap: () {
+                    setState(() {
+                      _controller.clear();
+                    });
+                    widget.onClear == null ? null : widget.onClear!(true);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 12, 0),
+                    child: SvgPicture.asset(AppIcons.clear),
+                  ),
+                )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderSide: BorderSide(
+              color: widget.hasBorder ? ghost : Colors.transparent,
+              width: 1.6,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderSide:
+                BorderSide(color: widget.focusedBorderColor, width: 1.6),
+          ),
+        ),
       ),
     );
   }

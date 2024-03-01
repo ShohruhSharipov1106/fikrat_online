@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 
 class DefaultTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -92,97 +90,91 @@ class DefaultTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocalesBloc, LocalesState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (title.isNotEmpty) ...[
-              Text(context.read<LocalesBloc>().translate(title),
-                  style: titleStyle ?? Theme.of(context).textTheme.labelLarge),
-              const SizedBox(height: 8),
-            ],
-            Container(
-              height: height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(fullFieldBorder ?? 0),
-                color: fullFieldColor,
-              ),
-              child: TextFormField(
-                minLines: minLines,
-                readOnly: readOnly,
-                expands: expands ?? false,
-                maxLengthEnforcement: maxLengthEnforcement,
-                textAlignVertical: textAlignVertical,
-                focusNode: focusNode,
-                autofocus: autoFocus,
-                controller: controller,
-                onChanged: onChanged,
-                validator: validator,
-                textInputAction: textInputAction,
-                style: style ??
-                    Theme.of(context)
-                        .textTheme
-                        .labelLarge!
-                        .copyWith(fontSize: 14),
-                inputFormatters: inputFormatters,
-                obscureText: isObscure,
-                keyboardType: keyboardType,
-                maxLength: maxLength,
-                maxLines: isObscure ? 1 : maxLines,
-                cursorColor: cursorColor,
-                cursorWidth: 1,
-                cursorHeight: 20,
-                decoration: inputDecoration ??
-                    InputDecoration(
-                      constraints: constraints,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        borderSide: const BorderSide(color: errorRed),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        borderSide: BorderSide(
-                          color: hasError ? errorRed : enabledBorder,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        borderSide:
-                            BorderSide(color: hasError ? errorRed : focusColor),
-                      ),
-                      hintText:
-                          context.read<LocalesBloc>().translate(hintText ?? ''),
-                      hintStyle: hintStyle ??
-                          Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(fontSize: 14),
-                      contentPadding: contentPadding,
-                      suffixIconConstraints:
-                          BoxConstraints(maxWidth: suffixMaxWidth),
-                      suffixIcon: hasSuffixIcon
-                          ? const SizedBox()
-                          : Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: suffix,
-                            ),
-                      fillColor: fillColor,
-                      filled: true,
-                      prefixIconConstraints:
-                          BoxConstraints(maxWidth: prefixMaxWidth),
-                      prefixIcon: prefix,
-                      counterText: counterText,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (title.isNotEmpty) ...[
+          Text(
+            title,
+            style: titleStyle ?? Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: 8),
+        ],
+        Container(
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(fullFieldBorder ?? 0),
+            color: fullFieldColor,
+          ),
+          child: TextFormField(
+            minLines: minLines,
+            readOnly: readOnly,
+            expands: expands ?? false,
+            maxLengthEnforcement: maxLengthEnforcement,
+            textAlignVertical: textAlignVertical,
+            focusNode: focusNode,
+            autofocus: autoFocus,
+            controller: controller,
+            onChanged: onChanged,
+            validator: validator,
+            textInputAction: textInputAction,
+            style: style ??
+                Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 14),
+            inputFormatters: inputFormatters,
+            obscureText: isObscure,
+            keyboardType: keyboardType,
+            maxLength: maxLength,
+            maxLines: isObscure ? 1 : maxLines,
+            cursorColor: cursorColor,
+            cursorWidth: 1,
+            cursorHeight: 20,
+            decoration: inputDecoration ??
+                InputDecoration(
+                  constraints: constraints,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    borderSide: const BorderSide(color: errorRed),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    borderSide: BorderSide(
+                      color: hasError ? errorRed : enabledBorder,
                     ),
-              ),
-            ),
-          ],
-        );
-      },
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    borderSide:
+                        BorderSide(color: hasError ? errorRed : focusColor),
+                  ),
+                  hintText: hintText ?? '',
+                  hintStyle: hintStyle ??
+                      Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontSize: 14),
+                  contentPadding: contentPadding,
+                  suffixIconConstraints:
+                      BoxConstraints(maxWidth: suffixMaxWidth),
+                  suffixIcon: hasSuffixIcon
+                      ? const SizedBox()
+                      : Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: suffix,
+                        ),
+                  fillColor: fillColor,
+                  filled: true,
+                  prefixIconConstraints:
+                      BoxConstraints(maxWidth: prefixMaxWidth),
+                  prefixIcon: prefix,
+                  counterText: counterText,
+                ),
+          ),
+        ),
+      ],
     );
   }
 }

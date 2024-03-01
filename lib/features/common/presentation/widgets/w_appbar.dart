@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
 import 'package:fikrat_online/assets/constants/icons.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/w_scale_animation.dart';
 
 class WAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -69,15 +68,11 @@ class WAppBar extends StatelessWidget implements PreferredSizeWidget {
               titleWidget!
             } else ...{
               if (title.isNotEmpty) ...{
-                BlocBuilder<LocalesBloc, LocalesState>(
-                  builder: (context, state) {
-                    return Text(
-                      context.read<LocalesBloc>().translate(title),
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontSize: 20,
-                          ),
-                    );
-                  },
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontSize: 20,
+                      ),
                 ),
               },
             },

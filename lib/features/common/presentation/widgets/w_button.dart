@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 import 'package:fikrat_online/features/common/presentation/widgets/w_scale_animation.dart';
 
 class WButton extends StatelessWidget {
@@ -82,16 +81,12 @@ class WButton extends StatelessWidget {
                     .labelLarge!
                     .copyWith(color: isDisabled ? baliHai : white),
                 child: child ??
-                    BlocBuilder<LocalesBloc, LocalesState>(
-                      builder: (context, state) {
-                        return Text(
-                          context.read<LocalesBloc>().translate(text),
-                          style: textStyle,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: maxLines,
-                        );
-                      },
+                    Text(
+                      text,
+                      style: textStyle,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: maxLines,
                     ),
               ),
       ),

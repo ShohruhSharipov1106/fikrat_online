@@ -1,5 +1,9 @@
 import 'package:fikrat_online/core/data/singletons/dio_settings.dart';
 import 'package:fikrat_online/core/data/singletons/storage.dart';
+import 'package:fikrat_online/features/auth/data/datasources/authentication_datasource.dart';
+import 'package:fikrat_online/features/auth/data/repositories/authentication_repository_impl.dart';
+import 'package:fikrat_online/features/profile/data/datasources/profile_datasource.dart';
+import 'package:fikrat_online/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt serviceLocator = GetIt.I;
@@ -10,11 +14,19 @@ Future<void> setupLocator() async {
   serviceLocator.registerLazySingleton(() => DioSettings());
 
   ///
-  // serviceLocator
-  //     .registerLazySingleton(() => AuthenticationDataSourceImpl(serviceLokator<DioSettings>().dio(baseUrl: baseIdUrl)));
+  serviceLocator.registerLazySingleton(
+      () => AuthenticationDataSourceImpl(serviceLocator<DioSettings>().dio()));
 
-  // serviceLocator.registerLazySingleton(
-  //     () => AuthenticationRepositoryImpl(dataSource: serviceLokator<AuthenticationDataSourceImpl>()));
+  serviceLocator.registerLazySingleton(() => AuthenticationRepositoryImpl(
+      dataSource: serviceLocator<AuthenticationDataSourceImpl>()));
+
+  ///
+
+  serviceLocator.registerLazySingleton(
+      () => ProfileDataSourceImpl(serviceLocator<DioSettings>().dio()));
+
+  serviceLocator.registerLazySingleton(() => ProfileRepositoryImpl(
+      profileDatasource: serviceLocator<ProfileDataSourceImpl>()));
 
   ///
 

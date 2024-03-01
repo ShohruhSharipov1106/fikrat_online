@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fikrat_online/assets/colors/colors.dart';
 import 'package:fikrat_online/assets/constants/icons.dart';
-import 'package:fikrat_online/assets/network_locales/locales_bloc/locales_bloc.dart';
 
 class SingleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -38,14 +37,9 @@ class SingleAppBar extends StatelessWidget implements PreferredSizeWidget {
           colorFilter: const ColorFilter.mode(black, BlendMode.srcIn),
         ),
       ),
-      title: BlocBuilder<LocalesBloc, LocalesState>(
-        builder: (context, state) {
-          return Text(
-            context.read<LocalesBloc>().translate(title),
-            style:
-                Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 16),
-          );
-        },
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 16),
       ),
       actions: actionIcon != null ? [actionIcon!] : null,
     );
